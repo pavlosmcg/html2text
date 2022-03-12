@@ -1,21 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 
 namespace Html2Text
 {
-    public class TextExtractionVisitor : HTMLParserBaseVisitor<string> // TODO can we use a better generic type here?
+    public class TextExtractionVisitor : HTMLParserBaseVisitor<string>
     {
-        public List<string> TextFragments = new List<string>();
+        public new string AggregateResult(string aggregate, string nextResult)
+        {
+            if (string.IsNullOrWhiteSpace(aggregate))
+                return nextResult;
+            if (string.IsNullOrWhiteSpace(nextResult))
+                return aggregate;
+            return $"{aggregate} {nextResult}";
+        }
+
+        public override string VisitChildren(IRuleNode node)
+        {
+            string result = this.DefaultResult;
+            int childCount = node.ChildCount;
+            for (int i = 0; i < childCount && this.ShouldVisitNextChild(node, result); ++i)
+            {
+                string nextResult = node.GetChild(i).Accept<string>((IParseTreeVisitor<string>)this);
+                result = AggregateResult(result, nextResult);
+            }
+            return result;
+        }
 
         public override string VisitHtmlChardata([NotNull] HTMLParser.HtmlChardataContext context)
         {
-            ITerminalNode text = context.HTML_TEXT();
-            TextFragments.Add(text.ToString());
-
-            return VisitChildren(context); // TODO - do we visit the children or quit if it's just text?
+            var token = context.HTML_TEXT().Payload as CommonToken;
+            return token?.Text.Trim();
         }
     }
 }

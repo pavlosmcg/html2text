@@ -1,4 +1,3 @@
-using Html2Text;
 using NUnit.Framework;
 
 namespace Html2Text.Tests

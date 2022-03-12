@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Antlr4.Runtime;
+﻿using Antlr4.Runtime;
 
 namespace Html2Text
 {
@@ -15,15 +13,7 @@ namespace Html2Text
             var documentContext = parser.htmlDocument();
 
             var visitor = new TextExtractionVisitor();
-            visitor.Visit(documentContext);
-
-            var builder = new StringBuilder();
-            foreach (var fragment in visitor.TextFragments)
-            {
-                builder.Append(fragment); // TODO append with new line
-            }
-
-            return builder.ToString();
+            return visitor.Visit(documentContext);
         }
     }
 }
