@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Html2Text.Tests
 {
-    public class HtmlConversionTests
+    public class HtmlConvertorTests
     {
         [Test]
         public void GetText_ReturnsInnerText_WhenDocumentIsASimpleTag()
