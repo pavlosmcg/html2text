@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Html2Text.Tests
 {
@@ -9,12 +10,6 @@ namespace Html2Text.Tests
         [TestCase("<p>blorgfester</p>")]
         [TestCase("<h1>blorgfester</h1>")]
         [TestCase("<strong>blorgfester</strong>")]
-        [TestCase("<em>blorgfester</em>")]
-        [TestCase("<blockquote>blorgfester</blockquote>")]
-        [TestCase("<code>blorgfester</code>")]
-        [TestCase("<samp>blorgfester</samp>")]
-        [TestCase("<kbd>blorgfester</kbd>")]
-        [TestCase("<var>blorgfester</var>")]
         [TestCase("<imadethisup>blorgfester</imadethisup>")]
         public void GetText_ReturnsInnerText_WhenInputIsASingleTag(string input)
         {
@@ -22,13 +17,34 @@ namespace Html2Text.Tests
             Assert.AreEqual("blorgfester", result);
         }
 
+        [TestCase("<ul><li>List item text</li></ul>", ExpectedResult = "List item text")]
+        [TestCase("<dd><i>What are we going to do now?</i></dd>", ExpectedResult = "What are we going to do now?")]
         [TestCase("<p>Some <span>text<span></p>", ExpectedResult="Some text")]
-        [TestCase("<p attr='something'>Some <br>text on a new line<span></p>", ExpectedResult="Some text on a new line")]
-        [TestCase("<ul><li>List item text</li></ul>", ExpectedResult="List item text")]
-        [TestCase("<ul><li>First</li><li>Second</li></ul>", ExpectedResult="First Second")]
         public string GetText_ReturnsInnerText_WhenInputHasNestedTags(string input)
         {
             return Html.GetText(input);
         }
+
+        [Test]
+        public void GetText_ReturnsTextWithNewLines_WhenInputHasBr_Tag()
+        {
+            var input = "<p attr='something'>Some more <br>Text on a new line<span></p>";
+            var expected = @"
+Some more
+Text on a new line";
+
+            Assert.AreEqual(expected.TrimStart(), Html.GetText(input));
+        }
+
+        [Test]
+        public void GetText_ReturnsMultipleLines_WhenInputIsList()
+        {
+            var input = "<ul><li>First</li><li>Second</li></ul>";
+            var expected = @"
+First
+Second";
+            Assert.AreEqual(expected.TrimStart(), Html.GetText(input));
+        }
+
     }
 }
