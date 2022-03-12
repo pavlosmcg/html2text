@@ -6,11 +6,11 @@ using Antlr4.Runtime.Tree;
 
 namespace Html2Text
 {
-    public class TextExtractionVisitor : HTMLParserBaseVisitor<object> // TODO can we use a better generic type here?
+    public class TextExtractionVisitor : HTMLParserBaseVisitor<string> // TODO can we use a better generic type here?
     {
         public List<string> TextFragments = new List<string>();
 
-        public override object VisitHtmlChardata([NotNull] HTMLParser.HtmlChardataContext context)
+        public override string VisitHtmlChardata([NotNull] HTMLParser.HtmlChardataContext context)
         {
             ITerminalNode text = context.HTML_TEXT();
             TextFragments.Add(text.ToString());
