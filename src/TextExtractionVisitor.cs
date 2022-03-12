@@ -29,8 +29,8 @@ namespace Html2Text
 
         public override string VisitHtmlChardata([NotNull] HTMLParser.HtmlChardataContext context)
         {
-            var token = context.HTML_TEXT().Payload as CommonToken;
-            return token?.Text.Trim();
+            var token = context?.HTML_TEXT()?.Payload as CommonToken;
+            return token?.Text?.Trim();
         }
     }
 }
