@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Html2Text.Tests
 {
@@ -20,6 +19,10 @@ namespace Html2Text.Tests
         [TestCase("<ul><li>List item text</li></ul>", ExpectedResult = "List item text")]
         [TestCase("<dd><i>What are we going to do now?</i></dd>", ExpectedResult = "What are we going to do now?")]
         [TestCase("<p>Some <span>text<span></p>", ExpectedResult="Some text")]
+        [TestCase("<p>Some <span>text<span> after nested tag</p>", ExpectedResult = "Some text after nested tag")]
+        [TestCase("<div><p>Inside elements nested correctly</p></div>", ExpectedResult = "Inside elements nested correctly")]
+        [TestCase("<div><p>Inside elements nested incorrectly</div></p>", ExpectedResult = "Inside elements nested incorrectly")]
+        [TestCase("<div><p>Inside elements nested incorrectly</div>", ExpectedResult = "Inside elements nested incorrectly")]
         public string GetText_ReturnsInnerText_WhenInputHasNestedTags(string input)
         {
             return Html.GetText(input);
@@ -28,7 +31,7 @@ namespace Html2Text.Tests
         [Test]
         public void GetText_ReturnsTextWithNewLines_WhenInputHasBr_Tag()
         {
-            var input = "<p attr='something'>Some more<br>Text on a new line<span></p>";
+            var input = "<p>Some more<br>Text on a new line<span></p>";
             var expected = @"
 Some more
 Text on a new line";
@@ -37,12 +40,48 @@ Text on a new line";
         }
 
         [Test]
-        public void GetText_ReturnsMultipleLines_WhenInputIsList()
+        public void GetText_ReturnsMultipleLines_WhenInputContainsList()
         {
             var input = "<ul><li>First</li><li>Second</li></ul>";
             var expected = @"
 First
 Second";
+            Assert.AreEqual(expected.TrimStart(), Html.GetText(input));
+        }
+
+        [Test]
+        public void GetText_ReturnsMultipleLines_WhenInputContainsTable()
+        {
+            var input = @"
+<table>
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Savings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>January</td>
+      <td>$100</td>
+    </tr>
+    <tr>
+      <td>February</td>
+      <td>$80</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Sum</td>
+      <td>$180</td>
+    </tr>
+  </tfoot>
+</table>";
+            var expected = @"
+Month Savings
+January $100
+February $80
+Sum $180";
             Assert.AreEqual(expected.TrimStart(), Html.GetText(input));
         }
 

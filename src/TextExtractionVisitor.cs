@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
@@ -28,17 +29,34 @@ namespace Html2Text
             return result;
         }
 
+        public override StringBuilder VisitHtmlElements([NotNull] HTMLParser.HtmlElementsContext context)
+        {
+            // todo see if there are siblings here that need joining with spaces
+            //var childElement = context?.children[0] as HTMLParser.HtmlElementContext;
+
+            return VisitChildren(context);
+        }
+
+        public override StringBuilder VisitHtmlContent([NotNull] HTMLParser.HtmlContentContext context)
+        {
+            var result = VisitChildren(context);
+            if (result != null)
+            {
+                result = new StringBuilder(result.ToString().Trim(' '));
+            }
+
+            return result;
+        }
+
         public override StringBuilder VisitHtmlElement([NotNull] HTMLParser.HtmlElementContext context)
         {
-            var token = context?.TAG_NAME(0)?.Payload as CommonToken;
-            var tagName = token?.Text?.Trim();
-
             var result = VisitChildren(context);
-            if (NeedsNewLine(tagName))
+            if (NeedsSeparator(context, out string separator))
             {
                 result ??= new StringBuilder();
-                result.AppendLine();
+                result.Append(separator);
             }
+
             return result;
         }
 
@@ -49,19 +67,43 @@ namespace Html2Text
             return string.IsNullOrWhiteSpace(value) ? null : new StringBuilder(value);
         }
 
-        private static bool NeedsNewLine(string tagName)
+        private string GetTagName(HTMLParser.HtmlElementContext context)
         {
-            switch (tagName)
+            var token = context?.TAG_NAME(0)?.Payload as CommonToken;
+            var tagName = token?.Text?.Trim();
+            return tagName;
+        }
+
+        private bool NeedsSeparator(HTMLParser.HtmlElementContext context, out string separator)
+        {
+            separator = Environment.NewLine;
+            switch (GetTagName(context))
             {
                 case "li":
                 case "p":
                 case "br":
+                case "tr":
+                case "dt":
+                case "dd":
+                    return true;
+                case "th":
+                case "td":
+                    separator = " ";
                     return true;
                 default:
                     return false;
             }
         }
 
-        
+        private bool NeedsSpaceBetweenSiblings(HTMLParser.HtmlElementContext context)
+        {
+            return GetTagName(context) switch
+            {
+                "th" => true,
+                "dt" => true,
+                _ => false
+            };
+        }
+
     }
 }
