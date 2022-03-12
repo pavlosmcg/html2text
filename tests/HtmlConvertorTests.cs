@@ -28,7 +28,7 @@ namespace Html2Text.Tests
         [Test]
         public void GetText_ReturnsTextWithNewLines_WhenInputHasBr_Tag()
         {
-            var input = "<p attr='something'>Some more <br>Text on a new line<span></p>";
+            var input = "<p attr='something'>Some more<br>Text on a new line<span></p>";
             var expected = @"
 Some more
 Text on a new line";

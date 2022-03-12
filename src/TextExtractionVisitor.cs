@@ -32,9 +32,14 @@ namespace Html2Text
         {
             var token = context?.TAG_NAME(0)?.Payload as CommonToken;
             var tagName = token?.Text?.Trim();
-            bool needsNewLine = NeedsNewLine(tagName);
-            var innerResult = VisitChildren(context);
-            return needsNewLine ? innerResult.AppendLine() : innerResult;
+
+            var result = VisitChildren(context);
+            if (NeedsNewLine(tagName))
+            {
+                result ??= new StringBuilder();
+                result.AppendLine();
+            }
+            return result;
         }
 
         public override StringBuilder VisitHtmlChardata([NotNull] HTMLParser.HtmlChardataContext context)
