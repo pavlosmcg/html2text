@@ -76,7 +76,12 @@ ExpectedResult =
 Paragraph text
 Span in the middle
 Another paragraph")]
-        public string GetText_ReturnsTextWithAppropriateNewLines_WhenInputHasMixedBlocksAndInlineElements(string input)
+        [TestCase("<head><title>Clampdown - Wikipedia</title></head><body><h1>Clampdown</h1><div>From Wikipedia, the free encyclopedia</div></body>",
+            ExpectedResult = 
+@"Clampdown - Wikipedia
+Clampdown
+From Wikipedia, the free encyclopedia")]
+		public string GetText_ReturnsTextWithAppropriateNewLines_WhenInputHasMixedBlocksAndInlineElements(string input)
         {
             return Html.GetText(input);
         }
@@ -116,6 +121,5 @@ February $80
 Sum $180";
             Assert.AreEqual(expected, Html.GetText(input));
         }
-
     }
 }
