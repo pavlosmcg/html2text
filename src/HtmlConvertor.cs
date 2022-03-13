@@ -1,4 +1,5 @@
 ﻿using Antlr4.Runtime;
+using Html2Text.Generated;
 
 namespace Html2Text
 {
