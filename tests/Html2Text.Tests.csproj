@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Html2Text.csproj" />
+    <ProjectReference Include="../src/Html2Text.csproj" />
   </ItemGroup>
 
 </Project>

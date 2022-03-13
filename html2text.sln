@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Html2Text", "src\Html2Text.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Html2Text.Tests", "tests\Html2Text.Tests.csproj", "{83FBD49B-A9F6-4677-8A08-AB5FBED09D4A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "console\Console.csproj", "{898E8E5C-9E30-42EC-991C-1507D026A4BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{83FBD49B-A9F6-4677-8A08-AB5FBED09D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83FBD49B-A9F6-4677-8A08-AB5FBED09D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83FBD49B-A9F6-4677-8A08-AB5FBED09D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{898E8E5C-9E30-42EC-991C-1507D026A4BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{898E8E5C-9E30-42EC-991C-1507D026A4BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{898E8E5C-9E30-42EC-991C-1507D026A4BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{898E8E5C-9E30-42EC-991C-1507D026A4BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
