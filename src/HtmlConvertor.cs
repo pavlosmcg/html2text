@@ -13,7 +13,7 @@ namespace Html2Text
             var documentContext = parser.htmlDocument();
 
             var visitor = new TextExtractionVisitor();
-            return visitor.Visit(documentContext).ToString().Trim();
+            return visitor.Visit(documentContext).InnerText;
         }
     }
 }

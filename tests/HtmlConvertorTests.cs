@@ -31,22 +31,54 @@ namespace Html2Text.Tests
         [Test]
         public void GetText_ReturnsTextWithNewLines_WhenInputHasBr_Tag()
         {
-            var input = "<p>Some more<br>Text on a new line<span></p>";
-            var expected = @"
-Some more
+            var input = "<p>Some more<br>Text on a new line</p>";
+            var expected =
+@"Some more
 Text on a new line";
 
-            Assert.AreEqual(expected.TrimStart(), Html.GetText(input));
+            Assert.AreEqual(expected, Html.GetText(input));
         }
 
         [Test]
         public void GetText_ReturnsMultipleLines_WhenInputContainsList()
         {
             var input = "<ul><li>First</li><li>Second</li></ul>";
-            var expected = @"
-First
+            var expected = 
+@"First
 Second";
-            Assert.AreEqual(expected.TrimStart(), Html.GetText(input));
+            Assert.AreEqual(expected, Html.GetText(input));
+        }
+
+        [TestCase("<span>Span text</span><p>Paragraph text</p>",
+ExpectedResult = 
+@"Span text
+Paragraph text")]
+        [TestCase("<span>Span text</span><p>Paragraph text</p><span>Another span</span>",
+ExpectedResult = 
+@"Span text
+Paragraph text
+Another span")]
+        [TestCase("<span>Span text</span><p>Paragraph text</p><p>Another paragraph</p><span>Another span</span>",
+ExpectedResult = 
+@"Span text
+Paragraph text
+Another paragraph
+Another span")]
+        [TestCase("<span>Span text</span><p>Paragraph text</p><p>Another paragraph</p><span>Another span</span><span> with another span at the end</span>",
+ExpectedResult =
+@"Span text
+Paragraph text
+Another paragraph
+Another span with another span at the end")]
+        [TestCase("<span>Span text</span><p>Paragraph text</p><span>Span in the middle</span><p>Another paragraph</p>",
+ExpectedResult =
+@"Span text
+Paragraph text
+Span in the middle
+Another paragraph")]
+        public string GetText_ReturnsTextWithAppropriateNewLines_WhenInputHasMixedBlocksAndInlineElements(string input)
+        {
+            return Html.GetText(input);
         }
 
         [Test]
@@ -77,12 +109,12 @@ Second";
     </tr>
   </tfoot>
 </table>";
-            var expected = @"
-Month Savings
+            var expected = 
+@"Month Savings
 January $100
 February $80
 Sum $180";
-            Assert.AreEqual(expected.TrimStart(), Html.GetText(input));
+            Assert.AreEqual(expected, Html.GetText(input));
         }
 
     }
